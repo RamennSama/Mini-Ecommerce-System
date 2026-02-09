@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Confirmation</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .email-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .email-header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+        .success-icon {
+            font-size: 60px;
+            margin: 20px 0;
+        }
+        .email-body {
+            padding: 30px;
+        }
+        .greeting {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .info-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        .info-label {
+            color: #666;
+            font-weight: 500;
+        }
+        .info-value {
+            color: #333;
+            font-weight: 600;
+        }
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .items-table th {
+            background-color: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+        .items-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .items-table tr:last-child td {
+            border-bottom: none;
+        }
+        .items-table tr:hover {
+            background-color: #f8f9fa;
+        }
+        .total-row {
+            background-color: #f8f9fa;
+            font-weight: 700;
+            font-size: 18px;
+            color: #667eea;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        .button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: 600;
+        }
+        .status-badge {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="email-header">
+            <div class="success-icon">✓</div>
+            <h1>Payment Successful!</h1>
+            <p>Your order has been confirmed</p>
+        </div>
+
+        <!-- Body -->
+        <div class="email-body">
+            <p class="greeting">Dear <strong th:text="${customerName}">Customer</strong>,</p>
+            
+            <p>Thank you for your payment! Your order has been successfully processed and confirmed.</p>
+
+            <!-- Order Information -->
+            <div class="info-box">
+                <h3 style="margin-top: 0; color: #667eea;">Order Details</h3>
+                <div class="info-row">
+                    <span class="info-label">Order ID:</span>
+                    <span class="info-value" th:text="${orderId}">#123</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Transaction Reference:</span>
+                    <span class="info-value" th:text="${txnRef}">abc-123-def</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Order Date:</span>
+                    <span class="info-value" th:text="${orderDate}">01/01/2026 10:00</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Status:</span>
+                    <span class="status-badge">PAID</span>
+                </div>
+            </div>
+
+            <!-- Order Items -->
+            <h3 style="color: #667eea;">Order Items</h3>
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th style="text-align: center;">Quantity</th>
+                        <th style="text-align: right;">Price</th>
+                        <th style="text-align: right;">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item : ${items}">
+                        <td th:text="${item.product.name}">Product Name</td>
+                        <td style="text-align: center;" th:text="${item.quantity}">1</td>
+                        <td style="text-align: right;" th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')} + ' VND'">100,000 VND</td>
+                        <td style="text-align: right;" th:text="${#numbers.formatDecimal(item.price * item.quantity, 0, 'COMMA', 0, 'POINT')} + ' VND'">100,000 VND</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td colspan="3" style="text-align: right;">Total Amount:</td>
+                        <td style="text-align: right;" th:text="${#numbers.formatDecimal(totalAmount, 0, 'COMMA', 0, 'POINT')} + ' VND'">500,000 VND</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p style="color: #666; margin-top: 30px;">
+                Your order is being processed and will be delivered soon. You will receive another email once your order has been shipped.
+            </p>
+
+            <center>
+                <a href="http://localhost:8080" class="button">View Order Details</a>
+            </center>
+
+            <p style="color: #666; font-size: 14px; margin-top: 30px;">
+                If you have any questions, please don't hesitate to contact our customer support team.
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>E-Commerce System</strong></p>
+            <p>Thank you for shopping with us!</p>
+            <p>
+                <a href="#">Visit our website</a> | 
+                <a href="#">Contact Support</a> | 
+                <a href="#">Track Order</a>
+            </p>
+            <p style="font-size: 12px; color: #999; margin-top: 15px;">
+                This is an automated email. Please do not reply to this message.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

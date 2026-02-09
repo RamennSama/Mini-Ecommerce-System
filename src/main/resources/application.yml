@@ -1,0 +1,72 @@
+spring:
+  application:
+    name: Mini E-Commerce System
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/minisystem?createDatabaseIfNotExist=true
+    username: csdl_longsama
+    password: 12345
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+    open-in-view: false
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${email}
+    password: ${password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+
+  jwt:
+    secret: YzJ2bnhnaW5sb2NhbHNlY3JldGtleTEyMzQ1Njc4OTA=
+    expiration: 900000
+
+# Swagger/OpenAPI config
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /docs
+    enabled: true
+    operations-sorter: method
+    tags-sorter: alpha
+
+# Server config
+server:
+  port: 8080
+
+# Logging
+logging:
+  level:
+    com.ramennsama.springboot.system: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+# config vnpay
+vnpay:
+  version: 2.1.0
+  command: pay
+  currCode: VND
+  ortherType: other
+  locale: vn
+  tmnCode: CD05GGXB
+  hashSecret: TBPQ55BSF4J6M3IV53COITW3K16I2HPX
+  payUrl: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+  returnUrl: http://localhost:8080/api/vnpay/return
